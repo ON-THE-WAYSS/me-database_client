@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Times New Roman', Times, serif;
+}
+.activeSidebarLink {
+  background-color: #0e87a3 !important;
+  display: block;
+  color: white !important;
+}
+
+.MuiTableContainer-root {
+  overflow-x: auto;
+}
