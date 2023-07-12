@@ -18,6 +18,7 @@ import {
   Divider,
   Drawer,
   IconButton,
+  Pagination,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import MeTableRow from './MeTableRow';
@@ -29,6 +30,7 @@ import fetcher from '../../utils/Helpers/Fetcher/fetchApi';
 import { IMeList, IFieldOffice } from '../../utils/Type/type';
 import { useAuthContext } from '../../Context/AuthContext/AuthContext';
 import TuneIcon from '@mui/icons-material/Tune';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 type IGetIDProps = {
   categoryId: string | null;
   ngoId: string | null;
@@ -43,10 +45,19 @@ interface Props {
   window?: () => Window;
 }
 
+interface IMeData {
+  total: number;
+  meList: IMeList[];
+}
+const limit = 20;
+
 const drawerWidth = 240;
 export default function Me(props: Props) {
   const { window } = props;
-  const [meList, setMeList] = useState<IMeList[]>([]);
+  const [meList, setMeList] = useState<IMeData>({ total: 0, meList: [] });
+  const [searchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '0');
+  const navigate = useNavigate();
   const [fieldOffice, setFieldOffice] = useState<IFieldOffice[]>([]);
   const { user, token } = useAuthContext();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -76,40 +87,50 @@ export default function Me(props: Props) {
           areaId: getID.thanaId,
         });
 
-        let uri = '?';
+        let skip = 0;
+
+        if (page > 1) {
+          skip = (page - 1) * limit;
+        }
+
+        let uri = `?limit=${limit}&skip=${skip}`;
+
         if (getID.categoryId && getID.categoryId !== 'all') {
-          uri += `category=${getID.categoryId}&`;
+          uri += `&category=${getID.categoryId}`;
         }
         if (user.type === 'admin') {
           if (getID.ngoId && getID.ngoId !== 'all') {
-            uri += `ngo=${getID.ngoId}&`;
+            uri += `&ngo=${getID.ngoId}`;
           }
         } else if (user.type === 'ngo') {
-          uri += `ngo=${user.ngo_id}&`;
+          uri += `&ngo=${user.ngo_id}`;
         }
         if (user.type === 'admin' || user.type === 'ngo') {
           if (getID.fieldId && getID.fieldId !== 'all') {
-            uri += `field_office=${getID.fieldId}&`;
+            uri += `&field_office=${getID.fieldId}`;
           }
         } else {
-          uri += `field_office=${user.field_office_id}&`;
+          uri += `&field_office=${user.field_office_id}`;
         }
         if (getID.divisionId && getID.divisionId !== 'all') {
-          uri += `division=${getID.divisionId}&`;
+          console.log(getID.divisionId);
+          uri += `&division=${getID.divisionId}`;
         }
         if (getID.districtId && getID.districtId !== 'all') {
-          uri += `district=${getID.districtId}&`;
+          uri += `&district=${getID.districtId}`;
         }
         if (getID.thanaId && getID.thanaId !== 'all') {
-          uri += `thana=${getID.thanaId}&`;
+          uri += `&thana=${getID.thanaId}`;
         }
         if (getID.areaId && getID.areaId !== 'all') {
-          uri += `area=${getID.areaId}`;
+          uri += `&area=${getID.areaId}`;
         }
+
         setFilterData(finalData!);
         const data = await fetcher.get(`/api/v1/me${uri}`, token);
+
         if (data.success) {
-          setMeList(data.data);
+          setMeList({ total: data.total, meList: data.data });
 
           setLoading(false);
         } else {
@@ -120,7 +141,7 @@ export default function Me(props: Props) {
       }
     })();
     // fetchFilterApi({ districtId: getID.districtId, divisionId: getID.divisionId, subDistrictId: getID.areaId })
-  }, [getID, getID.areaId, token, user]);
+  }, [getID, getID.areaId, token, user, page]);
 
   useEffect(() => {
     (async () => {
@@ -219,9 +240,16 @@ export default function Me(props: Props) {
   const containers =
     window !== undefined ? () => window().document.body : undefined;
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    navigate(`/me?page=${value}`);
+  };
+
   return (
     <Container sx={{ mt: 1, px: 0 }} maxWidth='xl'>
-      <PageTitle title={'ME LIST'} />
+      <PageTitle title={`ME LIST (${meList.total})`} />
       <Grid
         mt={1}
         container
@@ -254,7 +282,7 @@ export default function Me(props: Props) {
                         marginX: '10px',
                       }}
                     >
-                      <FormControl
+                      {/* <FormControl
                         size='small'
                         variant='outlined'
                         sx={{ width: '110px' }}
@@ -281,7 +309,7 @@ export default function Me(props: Props) {
                             </MenuItem>
                           ))}
                         </Select>
-                      </FormControl>
+                      </FormControl> */}
 
                       {user.type === 'admin' ? (
                         <FormControl
@@ -388,7 +416,7 @@ export default function Me(props: Props) {
               <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: '700' }}>Serial</TableCell>
+                    <TableCell sx={{ fontWeight: '700' }}>ME id</TableCell>
                     {/* <TableCell sx={{ fontWeight: '700' }}>PHOTO</TableCell> */}
                     <TableCell sx={{ fontWeight: '700' }}>NAME</TableCell>
                     <TableCell sx={{ fontWeight: '700' }}>OCCUPATION</TableCell>
@@ -403,17 +431,19 @@ export default function Me(props: Props) {
                     <TableLoader />
                   ) : (
                     <>
-                      {meList?.length ? (
+                      {meList?.total ? (
                         <>
-                          {meList?.map((singleMe: IMeList, index: number) => {
-                            return (
-                              <MeTableRow
-                                key={singleMe.id}
-                                singleMe={singleMe}
-                                serial={index + 1}
-                              />
-                            );
-                          })}
+                          {meList.meList.map(
+                            (singleMe: IMeList, index: number) => {
+                              return (
+                                <MeTableRow
+                                  key={singleMe.id}
+                                  singleMe={singleMe}
+                                  serial={index + 1}
+                                />
+                              );
+                            }
+                          )}
                         </>
                       ) : (
                         <TableRow>
@@ -431,6 +461,11 @@ export default function Me(props: Props) {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Pagination
+              count={Math.ceil(meList.total / limit)}
+              page={page}
+              onChange={handlePageChange}
+            />
           </Card>
         </Grid>
       </Grid>
