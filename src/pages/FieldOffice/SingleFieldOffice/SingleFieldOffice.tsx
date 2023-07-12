@@ -40,7 +40,6 @@ const SingleFieldOffice = () => {
     phone,
     status,
     sub_district_name,
-    user_name,
   } = singleNgo;
 
   useEffect(() => {
