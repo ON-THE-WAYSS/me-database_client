@@ -75,7 +75,7 @@ const SingleFieldOffice = () => {
     } catch (error) {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, token]);
   console.log({ singleNgo });
   return (
     <>

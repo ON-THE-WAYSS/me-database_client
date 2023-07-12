@@ -56,7 +56,7 @@ export default function Me(props: Props) {
   const { window } = props;
   const [meList, setMeList] = useState<IMeData>({ total: 0, meList: [] });
   const [searchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '0');
+  const page = parseInt(searchParams.get('page') || '1');
   const navigate = useNavigate();
   const [fieldOffice, setFieldOffice] = useState<IFieldOffice[]>([]);
   const { user, token } = useAuthContext();
@@ -416,7 +416,7 @@ export default function Me(props: Props) {
               <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: '700' }}>ME id</TableCell>
+                    <TableCell sx={{ fontWeight: '700' }}>serial</TableCell>
                     {/* <TableCell sx={{ fontWeight: '700' }}>PHOTO</TableCell> */}
                     <TableCell sx={{ fontWeight: '700' }}>NAME</TableCell>
                     <TableCell sx={{ fontWeight: '700' }}>OCCUPATION</TableCell>
@@ -435,11 +435,12 @@ export default function Me(props: Props) {
                         <>
                           {meList.meList.map(
                             (singleMe: IMeList, index: number) => {
+                              const serial = page > 1 ? (page - 1) * limit : 0;
                               return (
                                 <MeTableRow
                                   key={singleMe.id}
                                   singleMe={singleMe}
-                                  serial={index + 1}
+                                  serial={serial + index + 1}
                                 />
                               );
                             }
