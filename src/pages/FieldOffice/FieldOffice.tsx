@@ -19,10 +19,11 @@ import {
   IconButton,
   Typography,
   Drawer,
+  TextField,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import CreateFieldOffice from '../../components/AddMe/CreateFieldOffice';
 import fetcher from '../../utils/Helpers/Fetcher/fetchApi';
 // import Avatar from '@mui/material/Avatar';
@@ -57,6 +58,7 @@ export default function FieldOffice(props: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterData, setFilterData] = useState<any[]>([]);
+  const [name, setName] = useState('');
 
   const [getID, setGetID] = useState<IGetIDProps>({
     divisionId: null,
@@ -86,6 +88,10 @@ export default function FieldOffice(props: Props) {
           uri += `ngo=${user.ngo_id}&`;
         }
 
+        if (name) {
+          uri += `name=${name}&`;
+        }
+
         if (getID.divisionId && getID.divisionId !== 'all') {
           uri += `division=${getID.divisionId}&`;
         }
@@ -110,7 +116,7 @@ export default function FieldOffice(props: Props) {
     } catch (error) {
       setLoading(false);
     }
-  }, [getID, token, user]);
+  }, [getID, token, user, name]);
 
   const getStatusFilterData = filterStatus;
   const drawer = (
@@ -179,7 +185,7 @@ export default function FieldOffice(props: Props) {
                       onClick={() => setOpen(true)}
                       sx={{ mr: 2, display: { xs: 'block', md: 'none' } }}
                     >
-                      Add field officer
+                      Create Branch
                     </Button>
                     <IconButton
                       color='inherit'
@@ -236,10 +242,23 @@ export default function FieldOffice(props: Props) {
                         setGetID: setGetID,
                         getID: getID,
                       })}
+
                       <Button variant='contained' onClick={() => setOpen(true)}>
                         Create Branch
                       </Button>
                     </Box>
+                    <TextField
+                      margin='none'
+                      fullWidth
+                      id='name'
+                      value={name}
+                      label='Search branch name...'
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setName(e.target.value)
+                      }
+                      type='text'
+                      variant='outlined'
+                    />
                   </Box>
                   <Box component='nav'>
                     <Drawer

@@ -19,8 +19,9 @@ import {
   Drawer,
   IconButton,
   Pagination,
+  TextField,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import MeTableRow from './MeTableRow';
 import { fetchFilterApi } from '../../components/filterCommonFetch/filterData';
 import { filterStatus } from '../../components/filterStatus/filterStatus';
@@ -61,8 +62,9 @@ export default function Me(props: Props) {
   const [fieldOffice, setFieldOffice] = useState<IFieldOffice[]>([]);
   const { user, token } = useAuthContext();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [name, setName] = useState('');
   const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
+    setMobileOpen(!mobileOpen);
   };
   const [loading, setLoading] = useState<boolean>(false);
   const [filterData, setFilterData] = useState<any[]>([]);
@@ -126,12 +128,15 @@ export default function Me(props: Props) {
           uri += `&area=${getID.areaId}`;
         }
 
+        if (name) {
+          uri += `&name=${name}`;
+        }
+
         setFilterData(finalData!);
         const data = await fetcher.get(`/api/v1/me${uri}`, token);
-
+        console.log({ data });
         if (data.success) {
           setMeList({ total: data.total, meList: data.data });
-
           setLoading(false);
         } else {
           setLoading(false);
@@ -141,7 +146,7 @@ export default function Me(props: Props) {
       }
     })();
     // fetchFilterApi({ districtId: getID.districtId, divisionId: getID.divisionId, subDistrictId: getID.areaId })
-  }, [getID, getID.areaId, token, user, page]);
+  }, [getID, getID.areaId, token, user, page, name]);
 
   useEffect(() => {
     (async () => {
@@ -165,6 +170,18 @@ export default function Me(props: Props) {
       </Typography>
       <Divider />
       <Box sx={{ padding: '15px' }}>
+        {/* <TextField
+          margin='none'
+          fullWidth
+          id='name'
+          value={name}
+          label='Search me name...'
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
+          type='text'
+          variant='outlined'
+        />
         <FormControl
           size='small'
           variant='outlined'
@@ -185,7 +202,7 @@ export default function Me(props: Props) {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
         <FormControl
           size='small'
           variant='outlined'
@@ -310,7 +327,6 @@ export default function Me(props: Props) {
                           ))}
                         </Select>
                       </FormControl> */}
-
                       {user.type === 'admin' ? (
                         <FormControl
                           size='small'
@@ -375,7 +391,6 @@ export default function Me(props: Props) {
                                     {statusOption.name}
                                   </MenuItem>
                                 ))}
-                            {}
                           </Select>
                         </FormControl>
                       ) : (
@@ -387,6 +402,18 @@ export default function Me(props: Props) {
                         getID: getID,
                       })}
                     </Box>
+                    <TextField
+                      margin='none'
+                      fullWidth
+                      id='name'
+                      value={name}
+                      label='Search me name...'
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setName(e.target.value)
+                      }
+                      type='text'
+                      variant='outlined'
+                    />
                   </Box>
                   <Box component='nav'>
                     <Drawer
@@ -416,7 +443,7 @@ export default function Me(props: Props) {
               <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: '700' }}>serial</TableCell>
+                    <TableCell sx={{ fontWeight: '700' }}>SERIAL</TableCell>
                     {/* <TableCell sx={{ fontWeight: '700' }}>PHOTO</TableCell> */}
                     <TableCell sx={{ fontWeight: '700' }}>NAME</TableCell>
                     <TableCell sx={{ fontWeight: '700' }}>OCCUPATION</TableCell>
