@@ -508,7 +508,10 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               label='Division'
               defaultValue='select'
               required
-              onChange={(e: any) => fetchAddress('division', e.target.value)}
+              onChange={(e: any) => {
+                fetchAddress('division', e.target.value);
+                setMeInfo({ ...meInfo, area_id: 0 });
+              }}
             >
               <MenuItem value='select' disabled>
                 Select division
@@ -530,7 +533,10 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               label='District'
               defaultValue='select'
               required
-              onChange={(e: any) => fetchAddress('district', e.target.value)}
+              onChange={(e: any) => {
+                fetchAddress('district', e.target.value);
+                setMeInfo({ ...meInfo, area_id: 0 });
+              }}
             >
               <MenuItem value='select' disabled>
                 Select district
@@ -552,7 +558,10 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               defaultValue='select'
               label='Thana'
               required
-              onChange={(e: any) => fetchAddress('thana', e.target.value)}
+              onChange={(e: any) => {
+                fetchAddress('thana', e.target.value);
+                setMeInfo({ ...meInfo, area_id: 0 });
+              }}
             >
               <MenuItem value='select' disabled>
                 Select thana
@@ -564,6 +573,7 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               })}
             </Select>
           </FormControl>
+          {meInfo.area_id ? <h2>Area id: {meInfo.area_id}</h2> : ''}
           <FormControl required margin='none' sx={{ m: 0 }}>
             <InputLabel required id='demo-simple-select-label'>
               Union
@@ -575,9 +585,7 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               defaultValue='select'
               required
               onChange={(e: any) =>
-                setMeInfo((oldData: any) => {
-                  return { ...oldData, area_id: e.target.value };
-                })
+                setMeInfo({ ...meInfo, area_id: e.target.value })
               }
             >
               <MenuItem value='select' disabled>

@@ -215,7 +215,7 @@ export default function SingleNgo() {
         >
           <Grid item xs={12}>
             <Card>
-              <CardHeader title='Field Officer' />
+              <CardHeader title='Branch' />
               <Divider />
               <TableContainer>
                 <Table aria-label='simple table'>
@@ -236,7 +236,6 @@ export default function SingleNgo() {
                       <TableCell sx={{ fontWeight: '700' }} align='center'>
                         DIVISION
                       </TableCell>
-
                       <TableCell sx={{ fontWeight: '700' }} align='left'>
                         ACTION
                       </TableCell>
@@ -286,7 +285,7 @@ export default function SingleNgo() {
                               </TableCell>
 
                               <TableCell>
-                                <Link to={`/field-office/${sNgo.id}`}>
+                                <Link to={`/branch/${sNgo.id}`}>
                                   <VisibilityIcon color='primary' />
                                 </Link>
                               </TableCell>
