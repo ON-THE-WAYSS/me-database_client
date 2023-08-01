@@ -9,10 +9,8 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { ISingleFieldOffice } from '../../utils/Type/type';
 import { useAuthContext } from '../../Context/AuthContext/AuthContext';
 import fetcher from '../../utils/Helpers/Fetcher/fetchApi';
 interface IDivision {
