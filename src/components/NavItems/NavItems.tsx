@@ -3,6 +3,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { NavLink, useLocation } from 'react-router-dom';
 import '../../index.css';
 import {
@@ -47,6 +48,13 @@ const categories = [
     icon: <PersonAddIcon />,
     routeName: 'Add ME',
     route: 'add-me',
+    permission: ['admin', 'ngo', 'fo'],
+  },
+  {
+    id: 5,
+    icon: <LocationOnIcon />,
+    routeName: 'Area Id',
+    route: 'address',
     permission: ['admin', 'ngo', 'fo'],
   },
 ];

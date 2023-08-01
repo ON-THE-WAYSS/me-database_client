@@ -15,6 +15,7 @@ import Login from '../pages/Login/Login';
 import AllMeOfNgo from '../pages/AllMeOfNgo/AllMeOfNgo';
 import PrivateRoute from './PrivateRoute/PrivateRoute';
 import PermissionRoute from './PrivateRoute/PermissionRoute';
+import Address from '../pages/Address/Address';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       },
       { path: 'ngo/:id/all-me-ngo', element: <AllMeOfNgo /> },
       { path: 'add-me', element: <AddME /> },
+      { path: 'address', element: <Address /> },
       { path: 'profile', element: <Profile /> },
       {
         path: 'branch',

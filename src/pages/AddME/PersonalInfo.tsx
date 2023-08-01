@@ -535,7 +535,6 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               required
               onChange={(e: any) => {
                 fetchAddress('district', e.target.value);
-                setMeInfo({ ...meInfo, area_id: 0 });
               }}
             >
               <MenuItem value='select' disabled>
@@ -560,7 +559,6 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               required
               onChange={(e: any) => {
                 fetchAddress('thana', e.target.value);
-                setMeInfo({ ...meInfo, area_id: 0 });
               }}
             >
               <MenuItem value='select' disabled>
@@ -573,7 +571,6 @@ const PersonalInfo = ({ setMeInfo, meInfo }: any) => {
               })}
             </Select>
           </FormControl>
-          {meInfo.area_id ? <h2>Area id: {meInfo.area_id}</h2> : ''}
           <FormControl required margin='none' sx={{ m: 0 }}>
             <InputLabel required id='demo-simple-select-label'>
               Union
