@@ -51,7 +51,7 @@ const categories = [
     permission: ['admin', 'ngo', 'fo'],
   },
   {
-    id: 5,
+    id: 6,
     icon: <LocationOnIcon />,
     routeName: 'Area Id',
     route: 'address',
